@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { auth } from "../firebase/config";
+import { auth, db } from "../firebase/config";
+import { doc, setDoc } from "firebase/firestore";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -7,9 +8,6 @@ import {
   onAuthStateChanged,
   updateProfile
 } from "firebase/auth";
-
-// Email del admin — solo este puede eliminar series
-const ADMIN_EMAIL = "tu@email.com";
 
 const AuthContext = createContext(null);
 
@@ -42,6 +40,11 @@ export function AuthProvider({ children }) {
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(cred.user, { displayName: nombre });
+      await setDoc(doc(db, "usuarios", cred.user.uid), {
+        nombre,
+        email,
+        creadoEn: new Date()
+      });
       return true;
     } catch (e) {
       if (e.code === "auth/email-already-in-use") {
@@ -57,11 +60,10 @@ export function AuthProvider({ children }) {
 
   const logout = () => signOut(auth);
 
-  const isAdmin = user?.email === ADMIN_EMAIL;
   const isLogged = !!user;
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, setError, login, register, logout, isAdmin, isLogged }}>
+    <AuthContext.Provider value={{ user, loading, error, setError, login, register, logout, isLogged }}>
       {children}
     </AuthContext.Provider>
   );
