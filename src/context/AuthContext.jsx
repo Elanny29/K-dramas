@@ -11,9 +11,9 @@ import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 
 // ─── Configura tus claves de EmailJS ────────────────────────────────────────
-const EMAILJS_SERVICE_ID  = "TU_SERVICE_ID";
-const EMAILJS_TEMPLATE_ID = "TU_TEMPLATE_ID";
-const EMAILJS_PUBLIC_KEY  = "TU_PUBLIC_KEY";
+  const EMAILJS_SERVICE_ID  = "service_9b7zuey";
+  const EMAILJS_TEMPLATE_ID = "template_x26o3mu";
+  const EMAILJS_PUBLIC_KEY  = "ydc015lOzRR8xXnM8";
 // ─────────────────────────────────────────────────────────────────────────────
 
 const AuthContext = createContext(null);
