@@ -12,9 +12,10 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const ok = await login(email, password);
+    const result = await login(email, password);
     setLoading(false);
-    if (ok) navigate("/");
+    // Si las credenciales son correctas, redirigir a verificación
+    if (result.ok) navigate("/verificar");
   };
 
   return (
@@ -41,14 +42,23 @@ export default function LoginPage() {
             required
             style={styles.input}
           />
+
           {error && <p style={styles.error}>{error}</p>}
+
           <button type="submit" disabled={loading} style={styles.btn}>
-            {loading ? "Entrando..." : "Entrar"}
+            {loading ? "Verificando..." : "Entrar"}
           </button>
           <button type="button" style={styles.cancelBtn} onClick={() => navigate("/")}>
             Cancelar
           </button>
         </form>
+
+        <p style={styles.registerText}>
+          ¿No tienes cuenta?{" "}
+          <span style={styles.registerLink} onClick={() => navigate("/registro")}>
+            Crear cuenta
+          </span>
+        </p>
       </div>
     </div>
   );
@@ -73,11 +83,7 @@ const styles = {
     maxWidth: "400px",
     textAlign: "center"
   },
-  logo: {
-    fontSize: "2rem",
-    color: "#e63e6d",
-    marginBottom: "12px"
-  },
+  logo:  { fontSize: "2rem", color: "#e63e6d", marginBottom: "12px" },
   title: {
     fontFamily: "'Nanum Myeongjo', serif",
     fontSize: "2rem",
@@ -94,11 +100,7 @@ const styles = {
     textTransform: "uppercase",
     marginBottom: "32px"
   },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "14px"
-  },
+  form:      { display: "flex", flexDirection: "column", gap: "14px" },
   input: {
     background: "#0a0a0f",
     border: "1px solid rgba(230,62,109,0.3)",
@@ -119,8 +121,7 @@ const styles = {
     fontWeight: 600,
     cursor: "pointer",
     marginTop: "6px",
-    fontFamily: "'DM Sans', sans-serif",
-    letterSpacing: "0.5px"
+    fontFamily: "'DM Sans', sans-serif"
   },
   cancelBtn: {
     background: "transparent",
@@ -132,9 +133,7 @@ const styles = {
     cursor: "pointer",
     fontFamily: "'DM Sans', sans-serif"
   },
-  error: {
-    color: "#ff8fab",
-    fontSize: "13px",
-    margin: 0
-  }
+  registerText: { marginTop: "20px", fontSize: "13px", color: "#8a8499" },
+  registerLink: { color: "#ff8fab", cursor: "pointer", fontWeight: "600" },
+  error:        { color: "#ff8fab", fontSize: "13px", margin: 0 }
 };
