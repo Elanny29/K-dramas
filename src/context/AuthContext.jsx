@@ -11,9 +11,9 @@ import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 
 // ─── Configura tus claves de EmailJS ────────────────────────────────────────
-  const EMAILJS_SERVICE_ID  = "service_9b7zuey";
-  const EMAILJS_TEMPLATE_ID = "template_x26o3mu";
-  const EMAILJS_PUBLIC_KEY  = "ydc015lOzRR8xXnM8";
+const EMAILJS_SERVICE_ID  = "TU_SERVICE_ID";
+const EMAILJS_TEMPLATE_ID = "TU_TEMPLATE_ID";
+const EMAILJS_PUBLIC_KEY  = "TU_PUBLIC_KEY";
 // ─────────────────────────────────────────────────────────────────────────────
 
 const AuthContext = createContext(null);
@@ -31,11 +31,16 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
-      if (u && !pendingVerification) setUser(u);
+      // Si hay sesión activa pero no pasó por el login de esta sesión,
+      // cerrarla para forzar el flujo completo con 2FA
+      if (u && !pendingUser) {
+        signOut(auth);
+        setUser(null);
+      }
       setLoading(false);
     });
     return unsub;
-  }, [pendingVerification]);
+  }, []);
 
   /** Paso 1: valida credenciales y envía OTP por correo */
   const login = async (email, password) => {
